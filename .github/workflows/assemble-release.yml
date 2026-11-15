@@ -1,0 +1,74 @@
+name: Assemble verified portable release
+on:
+  workflow_dispatch:
+    inputs:
+      release_id:
+        description: Draft release ID
+        required: true
+      manifest_name:
+        description: Transfer manifest asset name
+        required: true
+        default: __kfs-transfer-manifest.json
+permissions:
+  contents: write
+jobs:
+  assemble:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Assemble and verify portable ZIP
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          RELEASE_ID: ${{ inputs.release_id }}
+          MANIFEST_NAME: ${{ inputs.manifest_name }}
+        shell: python
+        run: |
+          import hashlib, json, os, pathlib, subprocess, urllib.request, urllib.parse
+          repository = os.environ['REPOSITORY']
+          release_id = int(os.environ['RELEASE_ID'])
+          api = 'https://api.github.com/repos/' + repository
+          headers = {'Authorization': 'Bearer ' + os.environ['GH_TOKEN'], 'Accept': 'application/vnd.github+json'}
+          class SafeRedirect(urllib.request.HTTPRedirectHandler):
+              def redirect_request(self, req, fp, code, msg, response_headers, url):
+                  redirected = super().redirect_request(req, fp, code, msg, response_headers, url)
+                  if urllib.parse.urlparse(req.full_url).hostname != urllib.parse.urlparse(url).hostname:
+                      redirected.remove_header('Authorization')
+                  return redirected
+          opener = urllib.request.build_opener(SafeRedirect())
+          def get(url, binary=False):
+              request_headers = dict(headers)
+              if binary: request_headers['Accept'] = 'application/octet-stream'
+              return opener.open(urllib.request.Request(url, headers=request_headers), timeout=120)
+          with get(api + '/releases/' + str(release_id)) as response: release = json.load(response)
+          assert release['draft'] and release['tag_name'] == 'v1.0.0'
+          with get(api + '/releases/' + str(release_id) + '/assets?per_page=100') as response: assets = json.load(response)
+          manifest_asset = next(asset for asset in assets if asset['name'] == os.environ['MANIFEST_NAME'])
+          with get(api + '/releases/assets/' + str(manifest_asset['id']), True) as response: manifest = json.load(response)
+          filename = manifest['filename']
+          assert pathlib.Path(filename).name == filename and filename == 'K-File-Station-v1.0.0-Windows-x64.zip'
+          assert 0 < manifest['bytes'] < 2 * 1024**3
+          available = {asset['id']: asset for asset in assets}
+          digest = hashlib.sha256(); written = 0
+          with open(filename, 'wb') as output:
+              for index, part in enumerate(manifest['parts'], 1):
+                  asset = available[part['id']]
+                  assert asset['name'] == part['name'] and asset['name'].startswith('__kfs-part-')
+                  assert asset['state'] == 'uploaded' and asset['digest'] == 'sha256:' + part['sha256']
+                  part_digest = hashlib.sha256(); part_bytes = 0
+                  with get(api + '/releases/assets/' + str(part['id']), True) as response:
+                      while chunk := response.read(4 * 1024**2):
+                          output.write(chunk); digest.update(chunk); part_digest.update(chunk)
+                          written += len(chunk); part_bytes += len(chunk)
+                  assert part_bytes == part['bytes'] and part_digest.hexdigest() == part['sha256']
+                  print('Verified part', index, '/', len(manifest['parts']), flush=True)
+          assert written == manifest['bytes'] and digest.hexdigest() == manifest['sha256']
+          pathlib.Path('SHA256.txt').write_text(manifest['sha256'] + '  ' + filename + '\n', encoding='utf-8')
+          subprocess.run(['gh','release','upload','v1.0.0',filename,'SHA256.txt','--repo',repository,'--clobber'], check=True)
+          with get(api + '/releases/' + str(release_id) + '/assets?per_page=100') as response: final_assets = json.load(response)
+          uploaded = next(asset for asset in final_assets if asset['name'] == filename)
+          assert uploaded['digest'] == 'sha256:' + manifest['sha256'] and uploaded['size'] == manifest['bytes']
+          for asset_id in [part['id'] for part in manifest['parts']] + [manifest_asset['id']]:
+              request = urllib.request.Request(api + '/releases/assets/' + str(asset_id), headers=headers, method='DELETE')
+              with opener.open(request, timeout=30) as response: assert response.status == 204
+          print('Verified complete ZIP uploaded; temporary transfer assets removed.', flush=True)

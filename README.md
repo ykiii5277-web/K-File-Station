@@ -2,7 +2,7 @@
 
 **K File Station 1.0.0** · Windows 10 / 11 x64 · 本地处理 · 便携运行
 
-一个可以悬浮在桌面、自由拖动的蓝色科技风文件处理工具。通过圆形工作台或矩形窗口，完成文档、图片、结构化数据、音视频转换，以及压缩包解压与密码恢复。
+一个可以悬浮在桌面、自由拖动的蓝色科技风文件处理工具。通过圆形工作台或矩形窗口，完成文档、图片、结构化数据、音视频转换，以及压缩包解压与密码恢复，目前本版本支持35种不同文件格式间的92条转换关系。
 
 [下载 Windows 便携版](https://github.com/ykiii5277-web/K-File-Station/releases/tag/v1.0.0) · [全部发行版本](https://github.com/ykiii5277-web/K-File-Station/releases) · [反馈问题](https://github.com/ykiii5277-web/K-File-Station/issues)
 

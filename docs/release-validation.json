@@ -1,0 +1,33 @@
+{
+  "version": "1.0.0",
+  "status": "passed",
+  "conversion_directions": 92,
+  "baseline": {
+    "regression_tests": 194,
+    "conversion_cases": 96,
+    "unchanged_core": {
+      "converter.py": "22bc0fa0a070c6399e1bf97d1a2b3dcf340e82e07c01b212ffff5c412d487b99",
+      "image_converter.py": "1471e0cac8a0dff3f4390d26f51420d17c8e13db596aa72bb78e733b22273fad",
+      "data_converter.py": "5972585751fa5dfe8f5b955b46be3e25f9b5bc4d90563f77e471aa345f1b4ed6",
+      "media_converter.py": "094e9bbf191aa33f433386c22591e2cec8d5cb268ca623bff3dec60c80dcf352",
+      "office_extra.py": "d544413972a1d7a32447c3b19868cd8b6b73ef29a4ccd3a6cfd8b8a307feabd3",
+      "tar_extract.py": "e23ab9e9b7d36cf4f1328bf931a8ead41054cc55b52807db9dda61f2f04725b2",
+      "batch_convert.py": "876bd9039850b4a6ff0b726e81fe69f3d97c45590b7617bb9b5a58075671096b",
+      "file_policy.py": "6dcd9abe40919dbdf1dbe154c74a3bf8ec3cdcb34dde81836bf5fa3bf1849ebe",
+      "archive_bridge.py": "b196c85c4d1d2af2d1521b322bf31d30db0b73e7d7a42270601bb62aa17d374c",
+      "archive_ui.py": "274a591ff5a068ea2f7cc9ed41b6fc0379d5f37b12ef2d56214eca5d508c5556",
+      "progress_visual.py": "748f86e841661f3e7cbd100e8aa2055f68505b634fc60fdfdfae7494f71bfba3",
+      "help_dialog.py": "de9d220d30dbeb0793c11e36479899944603bcb24e4821213cb7508a6af6abb2",
+      "user_guide.py": "08d8a068bbcdc2b74551dc2b514399efc2a4261242d275a58362be7600e6c3b0",
+      "search_help.py": "31f91070fafb51e0147eb6fa39692d261a7b88dfed8d036720e9d9b259daaff7"
+    }
+  },
+  "native_groups": 40,
+  "archive_groups": 18,
+  "extended_directions": 28,
+  "animated_avif": true,
+  "publication_tests": 22,
+  "date": "2026-11-15",
+  "exe_sha256": "a9ee8e0216e7114cd7b063804a3898fbab78af43f46d9f57dd854d1a2b67e012",
+  "native_launcher_checks": 7
+}

@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>K文件处理台 · 本地文件转换工具</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/style.css"><script src="/app.js" defer></script>
+</head>
+<body>
+<svg class="sprite" xmlns="http://www.w3.org/2000/svg"><defs>
+ <symbol id="i-doc" viewBox="0 0 24 24"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9zM14 3v6h6M8 13h8M8 17h5"/></symbol>
+ <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m3 17 6-6 4 4 3-3 5 5"/></symbol>
+ <symbol id="i-data" viewBox="0 0 24 24"><path d="m8 5-5 7 5 7M16 5l5 7-5 7M14 3l-4 18"/></symbol>
+ <symbol id="i-media" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="4"/><path d="m10 8 6 4-6 4z"/></symbol>
+ <symbol id="i-archive" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="5" rx="2"/><path d="M5 9v11h14V9M10 13h4"/></symbol>
+ <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h16m-6-6 6 6-6 6"/></symbol>
+ <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V3m-5 5 5-5 5 5M4 15v5h16v-5"/></symbol>
+ <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+ <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 19V5h7l2 3h9v11z"/></symbol>
+ <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 3v13m-5-5 5 5 5-5M4 17v4h16v-4"/></symbol>
+ <symbol id="i-swap" viewBox="0 0 24 24"><path d="M4 7h15l-4-4M20 17H5l4 4M20 7l-4 4M4 17l4-4"/></symbol>
+</defs></svg>
+<aside class="sidebar">
+  <a class="brand" href="/" aria-label="K文件处理台首页"><span class="brand-mark"><svg><use href="#i-swap"/></svg></span><span>K文件处理台<small>FILE CONVERTER</small></span></a>
+  <div class="nav-caption">工作空间</div>
+  <button class="nav-button active" id="nav-convert"><svg><use href="#i-swap"/></svg>文件转换<span class="nav-dot"></span></button>
+  <button class="nav-button" id="nav-history"><svg><use href="#i-folder"/></svg>转换记录<span id="history-count">0</span></button>
+  <div class="sidebar-divider"></div><div class="nav-caption">五种可能，一个入口</div>
+  <div class="module-list"><span><i class="mint"></i>文档与办公<b>已开放</b></span><span><i class="blue"></i>图片与图像<b>已开放</b></span><span><i class="purple"></i>结构化数据<b>已开放</b></span><span><i class="orange"></i>音视频<b>已开放</b></span><span><i class="pink"></i>解压与破译</span></div>
+  <div class="local-card"><span class="local-icon"><svg><use href="#i-check"/></svg></span><strong>文件，留在你的电脑</strong><p>所有转换在本机完成<br>无需联网，安心处理</p><span class="local-state"><i></i>本地运行</span></div>
+  <div class="sidebar-bottom"><span>本地文件处理</span><span>v1.0.0</span></div>
+</aside>
+<div class="app-shell">
+ <header><div class="breadcrumb">工作空间 <span>/</span> <strong id="page-name">文件转换</strong></div><div class="header-actions"><span class="offline-badge"><i></i>离线可用</span><button class="icon-button" id="help-button" aria-label="使用说明">?</button><button class="exit-button" id="exit-button">退出工具</button></div></header>
+ <main>
+  <div class="page-heading"><div><div class="eyebrow">A NEW FORMAT. A NEW POSSIBILITY.</div><h1>让文件，换一种可能<span>。</span></h1><p>从圆盘选择一个板块，让格式转换变得简单。</p></div><span class="edition"><i></i>四个板块已就绪</span></div>
+  <section id="convert-view">
+   <div class="workspace">
+    <section class="orbit-panel" aria-label="文件格式转换圆盘">
+     <div class="panel-heading"><span><i></i>转换工作台</span><span class="panel-counter" id="workspace-step">01 / 选择板块</span></div>
+     <div class="orbit-stage" id="drop-area">
+      <div class="orbit-grid"></div><svg id="wheel" viewBox="0 0 700 700" aria-label="五板块圆盘与目标格式外环"></svg>
+      <div class="wheel-hub"><span class="hub-icon"><svg><use href="#i-swap"/></svg></span><strong id="hub-title">K文件处理台</strong><span id="hub-subtitle">选择一个板块开始</span></div>
+      <div class="orbit-prompt" id="orbit-prompt"><span>从文档与办公开始</span><svg><use href="#i-arrow"/></svg></div>
+      <div class="drop-overlay"><svg><use href="#i-upload"/></svg><strong>松开以添加文件</strong></div>
+     </div>
+     <div class="wheel-legend"><span><i class="mint"></i>已开放板块</span><span><i class="gray"></i>即将开放</span><span id="ring-legend" hidden><i class="darkmint"></i>点击外环直接转换</span></div>
+    </section>
+    <aside class="detail-panel">
+     <div class="detail-title"><span id="detail-step">01</span><h2 id="detail-title">开始一次转换</h2></div>
+     <div id="empty-detail"><div class="intro-illustration"><span class="mini-file">DOC<svg><use href="#i-doc"/></svg></span><svg class="mini-arrow"><use href="#i-arrow"/></svg><span class="mini-file target-file">PDF<svg><use href="#i-doc"/></svg></span></div><h3>好内容，不受格式限制</h3><p>选择「文档与办公」，添加文件。<br>可转换的格式会出现在圆盘外环。</p><button class="primary-button" id="start-button">选择文档与办公<svg><use href="#i-arrow"/></svg></button><div class="supported-preview"><span>这一版支持</span><div>Word <i>·</i> PDF <i>·</i> Excel <i>·</i> PPT<br>Markdown <i>·</i> HTML <i>·</i> CSV</div></div></div>
+     <div id="file-detail" hidden>
+      <button class="upload-box" id="upload-button"><span class="upload-icon"><svg><use href="#i-upload"/></svg></span><strong>点击选择或拖入文件</strong><span>单个文件最大 500 MB；音视频 2 GB</span></button>
+      <p class="accepted">DOCX · PDF · XLSX · PPTX · MD · HTML · CSV<br>TXT、EPUB 已支持作为输入</p>
+      <div id="file-info" hidden><div class="file-card"><span class="file-ext" id="file-ext">PDF</span><div><strong id="file-name"></strong><small id="file-size"></small></div><button id="remove-file" class="remove-button" aria-label="移除文件">×</button></div><div class="file-options" id="file-options"></div><div class="target-title">可转换为 <span id="target-count"></span></div><div id="target-chips"></div><p class="target-hint" id="target-hint">点击圆盘外环的格式，立即开始转换。</p></div>
+     </div>
+     <div id="job-detail" aria-live="polite" hidden></div>
+     <div class="detail-foot"><svg><use href="#i-check"/></svg><span>原文件保留，转换结果另存</span></div>
+    </aside>
+   </div>
+   <div class="journey"><div><span class="journey-num" id="step-1">01</span><div><strong>选择板块</strong><p>五大类，各就各位</p></div></div><span class="journey-line"></span><div><span class="journey-num" id="step-2">02</span><div><strong>添加文件</strong><p>自动识别可转换格式</p></div></div><span class="journey-line"></span><div><span class="journey-num" id="step-3">03</span><div><strong>点击格式，完成转换</strong><p>在外环找到你的目标格式</p></div></div></div>
+   <div class="recent-strip" id="recent-strip" hidden><span>最近完成</span><strong id="recent-name"></strong><span id="recent-route"></span><a id="recent-download">保存文件 <svg><use href="#i-down"/></svg></a></div>
+  </section>
+  <section id="history-view" hidden><div class="history-heading"><div><h2>转换记录</h2><p>本次运行中的转换任务。已生成的文件会一直保留在结果文件夹。</p></div><button class="secondary-button open-output"><svg><use href="#i-folder"/></svg>打开结果文件夹</button></div><div id="history-list"></div></section>
+  <footer><span>在K文件处理台，自由流转。</span><span>本地处理 <i>·</i> 无需账号 <i>·</i> 便携使用</span></footer>
+ </main>
+</div>
+<input type="file" id="file-input" accept=".txt,.epub,.avif,.mp3,.m4a,.aac,.tsv,.jsonl,.ndjson,.doc,.docx,.pdf,.xls,.xlsx,.ppt,.pptx,.md,.html,.htm,.csv,.jpg,.jpeg,.png,.tiff,.tif,.webp,.heic,.heif,.raw,.dng,.cr2,.cr3,.nef,.arw,.raf,.orf,.rw2,.pef,.svg,.gif,.json,.yaml,.yml,.xml,.mp4,.webm,.mkv,.mov,.wav,.flac" hidden>
+<div class="toast" id="toast" role="status" hidden></div>
+<dialog id="help-dialog"><button class="dialog-close" aria-label="关闭">×</button><span class="eyebrow">QUICK GUIDE</span><h2>三步，换个格式。</h2><ol><li>点击圆盘中的「文档与办公」，选择或拖入文件。</li><li>外环会按可转换格式的数量自动分区。点击目标格式开始转换。</li><li>转换完成后保存文件，或打开结果文件夹。</li></ol><p>「文档与办公」「图片与图像」均已开放。支持 JPG、PNG、TIFF、WebP、HEIC、AVIF、RAW、SVG、GIF 的示意图转换关系，含图片转 PDF、PNG 转 ICO、GIF 转 MP4。新增 JSON、YAML、XML、CSV 互转以及视频换封装、转码、音轨提取与 GIF 截取；解压与破译请使用原生桌面工作台。</p><p>扫描件默认开启中英文 OCR。PDF 版面重建和表格识别可能有偏差，请核对结果。所有处理在本机完成；文件不上传至互联网。</p><p>迁移时请复制整个便携版文件夹，在 Windows 10 / 11 的 64 位电脑上双击启动。字体差异可能影响排版。</p><button class="primary-button dialog-close">开始使用</button></dialog>
+</body></html>

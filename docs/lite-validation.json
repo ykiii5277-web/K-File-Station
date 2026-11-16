@@ -1,0 +1,48 @@
+{
+  "version": "1.0.0",
+  "edition": "Lite",
+  "date": "2026-11-16",
+  "status": "passed",
+  "archive_name": "K-File-Station-v1.0.0-Lite-Windows-x64.zip",
+  "archive_bytes": 395144101,
+  "archive_sha256": "4c4018449f618f4d9af67cdbd3edad8327ca4a308a19e52c9d0ecbd34187b2ad",
+  "native_exe_sha256": "a9ee8e0216e7114cd7b063804a3898fbab78af43f46d9f57dd854d1a2b67e012",
+  "retained_runtime_and_license_files_identical_to_full": 4855,
+  "direct_conversion_directions": 69,
+  "conversion_cases_including_scans_and_multipage": 73,
+  "missing_engine_messages_checked": [
+    "LibreOffice",
+    "Pandoc"
+  ],
+  "archive_groups": 18,
+  "native_launch_groups": 7,
+  "environment": "relocated Windows x64 folder with Chinese and spaces; system-only PATH; no installed Office/Pandoc detected",
+  "omitted_engines": [
+    "LibreOffice",
+    "Pandoc"
+  ],
+  "archive_search_engines_and_dictionaries": "all retained",
+  "demo": {
+    "status": "passed",
+    "duration_seconds": 63.5,
+    "checks": [
+      {
+        "case": "PNG → WEBP",
+        "passed": true,
+        "frames": 6
+      },
+      {
+        "case": "JSON → CSV",
+        "passed": true,
+        "records": 2
+      },
+      {
+        "case": "ZIP quick password recovery + extraction",
+        "passed": true,
+        "synthetic_password": "password",
+        "content_sha256": "3e2f49c8262034116c5c51f225c16ce1f9c239c0287525f99d81bade363d3fee"
+      }
+    ]
+  },
+  "reproducible_zip": true
+}

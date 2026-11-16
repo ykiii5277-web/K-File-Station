@@ -19,9 +19,18 @@ quick = '--quick' in sys.argv
 legacy = '--legacy' in sys.argv
 image_mode = '--images' in sys.argv
 new_mode = '--new' in sys.argv
-destination = root / ('build/图片格式 迁移验证/K文件处理台' if image_mode else 'build/旧版格式 迁移验证/K文件处理台' if legacy else 'build/最终 验证/K文件处理台' if quick else 'build/迁移 验证/K文件处理台')
+lite_mode = '--lite' in sys.argv
+destination = root / ('build/轻量版 迁移验证/K文件处理台' if lite_mode else 'build/图片格式 迁移验证/K文件处理台' if image_mode else 'build/旧版格式 迁移验证/K文件处理台' if legacy else 'build/最终 验证/K文件处理台' if quick else 'build/迁移 验证/K文件处理台')
 destination.parent.mkdir(parents=True, exist_ok=True)
-shutil.copytree(source, destination, dirs_exist_ok=True, ignore=shutil.ignore_patterns('data'))
+if lite_mode:
+    import zipfile
+    from package_lite import LITE_NAME
+    with zipfile.ZipFile(root/'release'/LITE_NAME) as bundle:
+        assert bundle.testzip() is None
+        assert not any(name.startswith('K文件处理台/data/') or '/engines/libreoffice/' in name or '/engines/pandoc/' in name for name in bundle.namelist())
+        bundle.extractall(destination.parent)
+else:
+    shutil.copytree(source, destination, dirs_exist_ok=True, ignore=shutil.ignore_patterns('data'))
 env = dict(os.environ)
 windows_root = os.environ.get('SystemRoot', 'C:/Windows')
 env['PATH'] = os.path.join(windows_root, 'System32') + ';' + windows_root
@@ -45,7 +54,12 @@ try:
         except httpx.TransportError:
             pass
         time.sleep(.1)
-    assert all(config.json()['engines'].values()), config.text
+    engines = config.json()['engines']
+    if lite_mode:
+        assert not engines['pandoc'] and not engines['office'], engines
+        assert all(value for name,value in engines.items() if name not in ('pandoc','office')), engines
+    else:
+        assert all(engines.values()), config.text
     module_spec = importlib.util.spec_from_file_location('conversion_fixtures', root / 'tests/test_conversions.py')
     module = importlib.util.module_from_spec(module_spec)
     module_spec.loader.exec_module(module)
@@ -69,6 +83,11 @@ try:
     cases = [(ext, target, 'sample.dng' if ext=='raw' else 'sample.'+ext) for ext, targets in config.json()['graph'].items() for target in targets]
     cases += [('pdf', target, 'scan.pdf') for target in ('txt', 'docx', 'xlsx')]
     cases += [('pdf', 'png', 'multi.pdf')]
+    if lite_mode:
+        from package_lite import unavailable_pairs
+        excluded = unavailable_pairs(config.json()['graph'], converter.IMAGE_EXTENSIONS)
+        cases = [case for case in cases if (case[0],case[1]) not in excluded]
+        assert len(cases) == 73  # 69 directions + 3 scan OCR cases + multipage PNG.
     if quick:
         cases = [case for case in cases if case in [('md', 'html', 'sample.md'), ('html', 'md', 'sample.html'), ('html', 'epub', 'sample.html'), ('csv', 'xlsx', 'sample.csv'), ('pdf', 'txt', 'scan.pdf')]]
     if legacy:
@@ -105,7 +124,23 @@ try:
         records.append({'source': ext, 'input': filename, 'target': target, 'bytes': len(result.content), 'warnings': job['warnings']})
         print(f'PASS {filename} -> {target} ({len(result.content)} bytes)', flush=True)
         client.delete('/api/files/' + uploaded['id'])
-    report = 'conversions-portable.json'
+    if lite_mode:
+        # Missing engines must produce a useful message rather than a crash.
+        for ext,target in [('docx','pdf'),('md','html')]:
+            with (samples/('sample.'+ext)).open('rb') as stream:
+                r=client.post('/api/files',files={'file':('missing-engine.'+ext,stream)})
+            assert r.status_code==200,r.text
+            uploaded=r.json()
+            job=client.post('/api/jobs',json={'fileId':uploaded['id'],'target':target}).json()
+            deadline=time.monotonic()+30
+            while time.monotonic()<deadline:
+                job=client.get('/api/jobs/'+job['id']).json()
+                if job['status'] in ('done','error'):break
+                time.sleep(.1)
+            assert job['status']=='error' and ('缺少' in job['message'] or '缺少' in job.get('error','')),job
+            client.delete('/api/files/'+uploaded['id'])
+        print('Lite missing-engine messages: PASS (LibreOffice and Pandoc)',flush=True)
+    report = 'lite-conversions-portable.json' if lite_mode else 'conversions-portable.json'
     (root / 'build' / report).write_text(json.dumps(records, ensure_ascii=False, indent=2), 'utf-8')
     client.post('/api/shutdown')
     process.wait(timeout=20)

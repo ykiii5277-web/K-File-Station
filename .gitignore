@@ -25,3 +25,7 @@ docs/**
 !docs/release-validation.json
 !docs/screenshots/
 !docs/screenshots/*.png
+!docs/demo/
+!docs/demo/*.gif
+!docs/demo/*.mp4
+!docs/lite-validation.json

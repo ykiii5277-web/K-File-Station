@@ -2,19 +2,28 @@
 
 **K File Station 1.0.0** · Windows 10 / 11 x64 · 本地处理 · 便携运行
 
-一个可以悬浮在桌面、自由拖动的蓝色科技风便捷文件处理工具。通过圆形工作台或矩形窗口，完成文档、图片、结构化数据、音视频转换，以及压缩包解压与密码恢复。目前版本支持35种不同文件格式间的92条直接转换方向和6种压缩包的解压或暴力破译。
+一个可以悬浮在桌面、自由拖动的蓝色科技风便捷文件处理工具。通过圆形工作台或矩形窗口，完成文档、图片、结构化数据、音视频转换，以及压缩包解压与密码恢复。完整版支持35种输入格式、92条直接转换方向、6类压缩格式解压，以及 ZIP / RAR / 7z 的密码恢复。
 
 [下载 Windows 便携版](https://github.com/ykiii5277-web/K-File-Station/releases/tag/v1.0.0) · [全部发行版本](https://github.com/ykiii5277-web/K-File-Station/releases) · [反馈问题](https://github.com/ykiii5277-web/K-File-Station/issues)
 
-![矩形工作台](docs/screenshots/workbench.png)
+[![圆形 Logo、圆盘、矩形工作台、拖入文件、转换与密码恢复演示](docs/demo/k-file-station-demo.gif)](docs/demo/k-file-station-demo.mp4)
+
+[查看清晰版 MP4（约64秒 / 1.5 MB）](docs/demo/k-file-station-demo.mp4)。白色背景，演示文件全部自行生成；包含图片转 WebP、JSON 转 CSV，以及弱密码测试压缩包的快速搜索与解压。压缩包演示密码为 `password`，实际搜索时间取决于密码复杂度、范围和设备。
 
 ## 下载与启动
 
-1. 在 Releases 下载 `K-File-Station-v1.0.0-Windows-x64.zip`，解压到可写目录。
-2. 双击解压目录中的 `K文件处理台.exe`。无需另装 Python、Office 或转换引擎。
+| 版本 | 压缩包大小 | 适用范围 | 下载 |
+| --- | --- | --- | --- |
+| 完整版 | 约966 MB | 全部92条转换方向，办公引擎完整内置 | [Windows x64 完整版](https://github.com/ykiii5277-web/K-File-Station/releases/download/v1.0.0/K-File-Station-v1.0.0-Windows-x64.zip) |
+| 轻量版 | 约377 MB，减少约61% | 69条转换方向；保留图片、音视频、数据、PDF/OCR及完整解压与密码恢复 | [Windows x64 轻量版](https://github.com/ykiii5277-web/K-File-Station/releases/download/v1.0.0/K-File-Station-v1.0.0-Lite-Windows-x64.zip) |
+
+轻量版省去内置 LibreOffice 和 Pandoc。依赖它们的23条办公转换需使用完整版；程序保留完整目标格式环，缺少引擎时会给出提示。具体支持关系和补齐引擎的方法见 [轻量版说明](LITE-EDITION.md)。两版均无需安装 Python，压缩包恢复引擎、GPU后端和搜索字典均完整保留。上表大小按1024进制计算。
+
+1. 在 Releases 选择一个版本，下载并解压到可写目录。
+2. 双击解压目录中的 `K文件处理台.exe`。完整版无需另装 Office 或转换引擎。
 3. 迁移到其他电脑时复制整个便携文件夹；需要保留结果、设置和搜索进度时，一并保留 `data`。
 
-`SHA256.txt` 提供便携包校验值。不要直接在压缩包中运行 EXE。
+`SHA256.txt` 提供完整版校验值，`SHA256-Lite.txt` 提供轻量版校验值。不要直接在压缩包中运行 EXE。
 
 ## 使用方式
 
@@ -25,6 +34,13 @@
 - 右键「使用说明」打开独立窗口。详细说明含六个一级目录、24个二级目录，初始全部折叠。
 
 <img src="docs/screenshots/radial.png" alt="圆形工作台" width="450">
+
+<details>
+<summary>查看矩形工作台截图</summary>
+
+![矩形工作台](docs/screenshots/workbench.png)
+
+</details>
 
 ## 五个板块
 
@@ -43,7 +59,7 @@
 ## 转换关系
 
 
-当前共92条直接转换方向，解压操作不计入。仅支持下表列出的方向，不能任意互转。
+完整版共92条直接转换方向，解压操作不计入。轻量版无需额外引擎支持其中69条，详见 [轻量版支持范围](LITE-EDITION.md)。仅支持下表列出的方向，不能任意互转。
 
 | 输入 | 可直接转换为 |
 | --- | --- |

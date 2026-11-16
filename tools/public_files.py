@@ -2,7 +2,7 @@
 from pathlib import Path
 
 DOCS = ('引擎来源.md', '图片引擎来源.md', '搜索范围与顺序.md',
-        '版本说明-v1.0.0.md', '验证-v1.0.0.md', 'release-validation.json')
+        '版本说明-v1.0.0.md', '验证-v1.0.0.md', 'release-validation.json', 'lite-validation.json')
 PYTHON_FILES = ('app.py', 'archive_bridge.py', 'archive_check.py', 'archive_ui.py',
                 'batch_convert.py', 'converter.py', 'data_converter.py', 'desktop.py',
                 'extended_check.py', 'file_policy.py', 'help_dialog.py', 'image_converter.py',
@@ -13,7 +13,7 @@ PYTHON_FILES = ('app.py', 'archive_bridge.py', 'archive_check.py', 'archive_ui.p
 def public_files(root):
     root = Path(root).resolve()
     selected = [root/name for name in PYTHON_FILES]
-    selected += [root/name for name in ('.gitignore', 'README.md', 'LICENSE.txt',
+    selected += [root/name for name in ('.gitignore', 'README.md', 'LITE-EDITION.md', 'LICENSE.txt',
         'THIRD_PARTY_NOTICES.md', 'requirements.txt', 'requirements-lock.txt',
         'portable.spec', 'pytest.ini', '启动工具.cmd')]
     for directory in ('web', 'tools', 'tests'):
@@ -22,4 +22,5 @@ def public_files(root):
                      and path.suffix not in ('.pyc', '.log', '.tmp', '.pem', '.key', '.pfx')]
     selected += [root/'docs'/name for name in DOCS]
     selected += list((root/'docs/screenshots').glob('*.png'))
+    selected += [path for path in (root/'docs/demo').glob('*') if path.suffix in ('.gif','.mp4')]
     return sorted({path.relative_to(root).as_posix() for path in selected if path.is_file()})
